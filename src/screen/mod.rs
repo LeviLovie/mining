@@ -10,7 +10,6 @@ pub struct Screen {
     pub Y: i32,
     pub Width: i32,
     pub Height: i32,
-    pub Scale: i32,
     pub Title: String,
     pub CloseRequested: bool,
     pub Window: Window,
@@ -23,12 +22,16 @@ pub struct Screen {
     pub FPS_max: i32,
 }
 impl Screen {
-    pub fn new(width: i32, height: i32, scale: i32, fps: i32, title: &str, debug: bool, debug_time: bool, fps_auto_adjust: bool, min_sleep_time: u128, fps_max: i32) -> Screen {
+    pub fn new(width: i32, height: i32, fps: i32, title: &str, debug: bool, debug_time: bool, fps_auto_adjust: bool, min_sleep_time: u128, fps_max: i32) -> Screen {
         let window_options = WindowOptions {
             borderless: false,
             title: true,
-            resize: false,
+            resize: true,
             scale: Scale::X1,
+            scale_mode: minifb::ScaleMode::AspectRatioStretch,
+            topmost: false,
+            transparency: false,
+            none: false,
         };
         let window = Window::new(&title, width as usize, height as usize, window_options).unwrap();
         return Screen {
@@ -36,7 +39,6 @@ impl Screen {
             Y: 0,
             Width: width,
             Height: height,
-            Scale: scale,
             Title: title.to_string(),
             CloseRequested: false,
             Window: window,
@@ -62,17 +64,15 @@ impl Screen {
             if self.FPS_auto_adjust {
                 if sleep_time.as_micros() > self.Min_sleep_time { if self.FPS < self.FPS_max { self.FPS += 1; max_update_time = Duration::from_micros(1_000_000 / self.FPS as u64); } } else if sleep_time.as_micros() < self.Min_sleep_time { if self.FPS != 1 { self.FPS -= 1; max_update_time = Duration::from_micros(1_000_000 / self.FPS as u64); } }
             }
-            let vram = vram_mut.lock().unwrap();
+            let mut vram = vram_mut.lock().unwrap();
 
-            // UPDATE
-
-            self.Window.update_with_buffer(&vram.buffer);
+            self.Window.update_with_buffer(&vram.buffer, self.Width as usize, self.Height as usize).unwrap(); vram.modified = false;
+            drop(vram);
             if self.CloseRequested { break }
             work_time = start_time.elapsed();
             self.debug(max_update_time, work_time, sleep_time, self.Debug, self.Debug_Time);
             if work_time <= max_update_time { sleep_time = max_update_time - work_time } else {sleep_time = Duration::from_micros(0) }
             if sleep_time.as_micros() > 0 { std::thread::sleep(sleep_time) }
-            drop(vram);
         }
     }
     fn debug(&mut self, max_update_time: Duration, work_time: Duration, sleep_time: Duration, debug: bool, debug_time: bool) {

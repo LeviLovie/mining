@@ -21,6 +21,7 @@ impl VRAM {
         if x >= self.size_x || y >= self.size_y {return;}
         let index = self.calc_index(x, y);
         self.buffer[index as usize] = color;
+        self.modified = true;
     }
     pub fn get_pixel(&self, x: i32, y: i32) -> u32 {
         if x >= self.size_x || y >= self.size_y {return 0x000000;}
@@ -31,6 +32,7 @@ impl VRAM {
         for i in 0..self.buffer.len() {
             self.buffer[i] = 0x000000;
         }
+        self.modified = true;
     }
 
     pub fn rect(&mut self, x: i32, y: i32, w: i32, h: i32, color: u32) {

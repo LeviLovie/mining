@@ -2,9 +2,8 @@ debug:
   debug_global: true
   debug_time_info: false
 screen:
-  size_x: 240
-  size_y: 160
-  scale: 3
+  size_x: 720
+  size_y: 480
   title: "Mining Game"
   fps:
     target_fps: 30
