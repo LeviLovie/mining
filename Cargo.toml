@@ -1,0 +1,10 @@
+[package]
+name = "mining"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+minifb = "0.24"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8.17"
+image = "0.24.6"

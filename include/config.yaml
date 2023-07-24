@@ -1,0 +1,12 @@
+debug:
+  debug_global: true
+  debug_time_info: false
+screen:
+  size_x: 720
+  size_y: 480
+  title: "Mining Game"
+  fps:
+    target_fps: 30
+    max_fps: 60
+    fps_auto_adjust: true
+    min_update_sleep_time: 250
