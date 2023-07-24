@@ -69,6 +69,7 @@ impl Screen {
                 if sleep_time.as_micros() > self.Min_sleep_time { if self.FPS < self.FPS_max { self.FPS += 1; max_update_time = Duration::from_micros(1_000_000 / self.FPS as u64); } } else if sleep_time.as_micros() < self.Min_sleep_time { if self.FPS != 1 { self.FPS -= 1; max_update_time = Duration::from_micros(1_000_000 / self.FPS as u64); } }
             }
             let mut vram = vram_mut.lock().unwrap();
+
             self.keypresses(Arc::clone(&self.Input));
 
             self.Window.update_with_buffer(&vram.buffer, self.Width as usize, self.Height as usize).unwrap(); vram.modified = false;
@@ -83,7 +84,6 @@ impl Screen {
     }
 
     fn keypresses(&mut self, input: Arc<Mutex<input::Input>>) {
-        if self.Window.is_key_down(Key::Space) { input.lock().unwrap().Space = true; } else { input.lock().unwrap().Space = false; }
         if self.Window.is_key_down(Key::A) { input.lock().unwrap().A = true; } else { input.lock().unwrap().A = false; }
         if self.Window.is_key_down(Key::B) { input.lock().unwrap().B = true; } else { input.lock().unwrap().B = false; }
         if self.Window.is_key_down(Key::C) { input.lock().unwrap().C = true; } else { input.lock().unwrap().C = false; }
@@ -129,6 +129,8 @@ impl Screen {
         if self.Window.is_key_down(Key::LeftShift) { input.lock().unwrap().Shift = true; } else { input.lock().unwrap().Shift = false; }
         if self.Window.is_key_down(Key::CapsLock) { input.lock().unwrap().CapsLock = true; } else { input.lock().unwrap().CapsLock = false; }
         if self.Window.is_key_down(Key::Tab) { input.lock().unwrap().Tab = true; }
+        if self.Window.is_key_down(Key::Escape) { input.lock().unwrap().Esc = true; } else { input.lock().unwrap().Esc = false; }
+        if self.Window.is_key_down(Key::Space) { input.lock().unwrap().Space = true; } else { input.lock().unwrap().Space = false; }
 
     }
 }

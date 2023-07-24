@@ -144,4 +144,73 @@ impl Input {
             Backtick: false,
         }
     }
+    pub fn zeros(&mut self) {
+        self.Mouse_Left = false;
+        self.Mouse_Right = false;
+        self.Mouse_Middle = false;
+        self.A = false;
+        self.B = false;
+        self.C = false;
+        self.D = false;
+        self.E = false;
+        self.F = false;
+        self.G = false;
+        self.H = false;
+        self.I = false;
+        self.J = false;
+        self.K = false;
+        self.L = false;
+        self.M = false;
+        self.N = false;
+        self.O = false;
+        self.P = false;
+        self.Q = false;
+        self.R = false;
+        self.S = false;
+        self.T = false;
+        self.U = false;
+        self.V = false;
+        self.W = false;
+        self.X = false;
+        self.Y = false;
+        self.Z = false;
+        self.ArrowUp = false;
+        self.ArrowDown = false;
+        self.ArrowLeft = false;
+        self.ArrowRight = false;
+        self.Num0 = false;
+        self.Num1 = false;
+        self.Num2 = false;
+        self.Num3 = false;
+        self.Num4 = false;
+        self.Num5 = false;
+        self.Num6 = false;
+        self.Num7 = false;
+        self.Num8 = false;
+        self.Num9 = false;
+        self.Ctrl = false;
+        self.Alt = false;
+        self.Shift = false;
+        self.CapsLock = false;
+        self.Tab = false;
+        self.F1 = false;
+        self.F2 = false;
+        self.F3 = false;
+        self.F4 = false;
+        self.F5 = false;
+        self.F6 = false;
+        self.F7 = false;
+        self.F8 = false;
+        self.F9 = false;
+        self.F10 = false;
+        self.F11 = false;
+        self.F12 = false;
+        self.Esc = false;
+        self.Space = false;
+        self.Enter = false;
+        self.Minus = false;
+        self.Plus = false;
+        self.Section = false;
+        self.Backtick = false;
+    }
 }
