@@ -1,2 +1,3 @@
-pub mod test;
 pub mod intro;
+pub mod license;
+pub mod menu;
