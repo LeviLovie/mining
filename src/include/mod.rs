@@ -8,3 +8,4 @@ pub fn to_ascii(bytes: &[u8]) -> String {
 }
 
 pub const CONFIG_FILE: &[u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/include/config.yaml"));
+pub const FONT_PNG: &[u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/include/font.png"));

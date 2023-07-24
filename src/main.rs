@@ -26,7 +26,7 @@ fn main() {
 
     let vram_mut = Arc::clone(&screen.VRAM);
     thread::spawn(move || {
-        engines::test::Run(vram_mut, "");
+        engines::intro::Run(vram_mut, screen.Width, screen.Height, "");
     });
     
     screen.run();

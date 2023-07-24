@@ -1,3 +1,10 @@
+// use image::{Rgb};
+
+const FONT_LETTERS: &str = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz(|)~";
+const LETTER_SIZE: usize = 8;
+const FONT_IMAGE_WIDTH: i32 = 160;
+const FONT_IMAGE_HEIGTH: i32 = 40;
+
 pub struct VRAM {
     pub size_x: i32,
     pub size_y: i32,
@@ -27,6 +34,12 @@ impl VRAM {
         if x >= self.size_x || y >= self.size_y {return 0x000000;}
         let index = self.calc_index(x, y);
         self.buffer[index as usize]
+    }
+    pub fn fill(&mut self, color: u32) {
+        for i in 0..self.buffer.len() {
+            self.buffer[i] = color;
+        }
+        self.modified = true;
     }
     pub fn clear(&mut self) {
         for i in 0..self.buffer.len() {
@@ -73,4 +86,34 @@ impl VRAM {
             }
         }
     }
+
+    // pub fn VRAM_write_text(&mut self, x: usize, y: usize, color: u32, text: &str) {
+    //     let text_length = text.len();
+
+    //     let image_data = crate::include::FONT_PNG;
+    //     let image: image::DynamicImage = image::load_from_memory(image_data).unwrap();
+    //     let img = image.to_rgb32f();
+
+    //     for i in 0..text_length {
+    //         for j in 0..FONT_LETTERS.len() {
+    //             if text.chars().nth(i) == FONT_LETTERS.chars().nth(j) {
+    //                 let mut letter_x = (j * LETTER_SIZE) % 160;
+    //                 let mut letter_y = 0;
+    //                 for i in 0..(j * LETTER_SIZE) / 160 {
+    //                     letter_y += LETTER_SIZE;
+    //                 }
+
+    //                 let color2 = &Rgb([0, 0, 0]);
+    //                 for k in 0..LETTER_SIZE {
+    //                     for l in 0..LETTER_SIZE {
+    //                         let img_pixel = img.get_pixel(letter_x as u32 + l as u32, letter_y as u32 + k as u32);
+    //                         if img_pixel == &Rgb([0.0, 0.0, 0.0]) {
+    //                             // self.VRAM_set_pixel(x + l + (i * LETTER_SIZE), y + k, color);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
