@@ -25,8 +25,11 @@ fn main() {
     );
 
     let vram_mut = Arc::clone(&screen.VRAM);
-    thread::spawn(move || {
-        engines::intro::Run(vram_mut, screen.Width, screen.Height, "");
+    let input_mut = Arc::clone(&screen.Input);
+    let _ = thread::Builder::new().name("engines".to_string()).spawn(move || {
+        engines::intro::Run(vram_mut, input_mut);
+        println!("TODO: Start Menu");
+        std::process::exit(0);
     });
     
     screen.run();
