@@ -2,7 +2,10 @@ use std::sync::Mutex;
 use std::{sync::Arc, thread};
 use std::time::{Duration, Instant};
 
-use crate::screen::color::*;
+fn write_text(vram: &mut crate::screen::vram::VRAM, x: i32, y: i32, y_add: i32, gap: i32, letter_size: i32, color: u32, text: &str) -> i32 {
+    vram.write_text(x as usize, (y + y_add + gap) as usize, color, text);
+    return y_add + gap + letter_size;
+}
 
 pub fn Run(vram_mut: Arc<Mutex<crate::screen::vram::VRAM>>, _size_x: i32, _size_y: i32, _data: &str) {
     let max_update_time = Duration::from_micros(100_000);
@@ -11,24 +14,26 @@ pub fn Run(vram_mut: Arc<Mutex<crate::screen::vram::VRAM>>, _size_x: i32, _size_
     let mut work_time: Duration;
     let mut sleep_time: Duration;
 
-    let colors_amount = (COLORS.len() as i32 / 2) - 1;
-    let rect_size = 10;
-    let palette_size = rect_size * colors_amount;
-    let palettes_in_screen_horizontaly = (_size_x as f32 / palette_size as f32).ceil() as i32;
-    let palettes_in_screen_vertically = (_size_y as f32 / rect_size as f32).ceil() as i32;
-    loop {
-        start_time = Instant::now(); let mut vram = vram_mut.lock().unwrap(); vram.clear();
+    let mut vram = vram_mut.lock().unwrap(); vram.clear();
+    let mut static_pointer_y: i32 = 0;
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 0, 8, 0x3333FF, "      ___      ___       __    __            _ ");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 0, 8, 0x3333FF, " |\\/|  |  |\\ |  |  |\\ | / _   / _  /\\  |\\/| |_ ");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 0, 8, 0x3333FF, " |  | _|_ | \\| _|_ | \\| \\_|   \\_| /--\\ |  | |_ ");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 0, 8, 0x3333FF, "                                               ");
 
-        let iteration_part: i32 = _iteration as i32 / 2;
-        
-        for y in 0..palettes_in_screen_vertically {
-            for x in 0..palettes_in_screen_horizontaly {
-                for i in 0..colors_amount {
-                    let mut x_pos = (((x * palette_size) + (i as i32 * rect_size)) + (y * rect_size)) + (iteration_part * rect_size);
-                    if x_pos >= _size_x { x_pos = x_pos - _size_x; }
-                    vram.rect(x_pos, y as i32 * rect_size, rect_size, rect_size, COLORS[i as usize]);
-                }
-            }
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 1, 8, 0xCCCCCC, "Game fully coded in Rust winthout any engine with MiniFB GUI library.");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 1, 8, 0xCCCCCC, "MIT License Copyright (c) 2023 leviiloviee.");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 1, 8, 0xCCCCCC, "Code, art, and desing on the GitHub:");
+    static_pointer_y = write_text(&mut vram, 20, 0, static_pointer_y, 1, 8, 0xCCCCCC, "https://github.com/LeviiLovie/mining");
+    static_pointer_y = write_text(&mut vram, 0, 0, static_pointer_y, 1, 8, 0xCCCCCC, "Latest versions can be also downloaded from Github:");
+    static_pointer_y = write_text(&mut vram, 20, 0, static_pointer_y, 1, 8, 0xCCCCCC, "https://github.com/LeviiLovie/mining/releases");
+    drop(vram);
+
+    loop {
+        start_time = Instant::now(); let mut vram = vram_mut.lock().unwrap();
+
+        if _iteration == 25 {
+            _ = write_text(&mut vram, 0, 0, static_pointer_y, 20, 8, 0xFF3333, "To continue press SPACE");
         }
 
         _iteration += 1; drop(vram); work_time = start_time.elapsed();     
