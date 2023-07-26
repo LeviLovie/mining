@@ -27,10 +27,10 @@ fn main() {
     let vram_mut = Arc::clone(&screen.VRAM);
     let input_mut = Arc::clone(&screen.Input);
     let _ = thread::Builder::new().name("engines".to_string()).spawn(move || {
-        let mut mode: u32 = 1;
+        let mut mode: u32 = 2;
         loop {
             if mode == 1 { mode = engines::intro::Run(&vram_mut, &input_mut); }
-            if mode == 2 { mode = engines::menu::Run(&vram_mut, &input_mut) }
+            if mode == 2 { mode = engines::menu::Run(&vram_mut, &input_mut, screen.Width) }
             if mode == 3 { mode = engines::license::Run(&vram_mut, &input_mut); }
             // if mode == 3 { mode = engines::agree::Run(&vram_mut, &input_mut); }
         }

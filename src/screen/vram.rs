@@ -1,4 +1,4 @@
-use image::Rgb;
+use image::{Rgb, ImageBuffer};
 
 const FONT_LETTERS: &str = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz(|)~";
 const LETTER_SIZE: usize = 8;
@@ -87,12 +87,8 @@ impl VRAM {
         }
     }
 
-    pub fn write_text(&mut self, x: usize, y: usize, color: u32, text: &str) {
+    pub fn write_text(&mut self, x: usize, y: usize, color: u32, font: Vec<u32>, text: &str) {
         let text_length = text.len();
-
-        let image_data = crate::include::FONT_PNG;
-        let image: image::DynamicImage = image::load_from_memory(image_data).unwrap();
-        let img = image.to_rgb32f();
 
         for i in 0..text_length {
             for j in 0..FONT_LETTERS.len() {
@@ -105,8 +101,7 @@ impl VRAM {
 
                     for k in 0..LETTER_SIZE {
                         for l in 0..LETTER_SIZE {
-                            let img_pixel = img.get_pixel(letter_x as u32 + l as u32, letter_y as u32 + k as u32);
-                            if img_pixel == &Rgb([0.0, 0.0, 0.0]) {
+                            if font[(letter_x + l + (letter_y + k) * FONT_IMAGE_WIDTH as usize) as usize] == 0x000000 {
                                 self.set_pixel((x + l + (i * LETTER_SIZE)) as i32, (y + k) as i32, color);
                             }
                         }
@@ -115,4 +110,22 @@ impl VRAM {
             }
         }
     }
+}
+
+pub fn get_font_image() -> Vec<u32> {
+    let image_data = crate::include::FONT_PNG;
+    let image: image::DynamicImage = image::load_from_memory(image_data).unwrap();
+    let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> = image.to_rgb8();
+    let mut font: Vec<u32> = Vec::new();
+    for i in 0..FONT_IMAGE_WIDTH {
+        for j in 0..FONT_IMAGE_HEIGTH {
+            let pixel = image_buffer.get_pixel(i as u32, j as u32);
+            let r = pixel[0] as u32;
+            let g = pixel[1] as u32;
+            let b = pixel[2] as u32;
+            let color = (r << 16) + (g << 8) + b;
+            font.push(color);
+        }
+    }
+    return font;
 }

@@ -4,7 +4,6 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 pub mod vram;
-pub mod color;
 pub mod input;
 
 pub struct Screen {
